@@ -13,8 +13,74 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
 
 public class verification_page extends StartupPage {
+
+
+//	TC-1 to 4 Locators
 	
-	//Write locators for all 9 testcases here
+	public By getUsernameTextfieldLocator() {
+		return By.id("username_id");
+	}
+	public By getUsernameTextboxLocator() {
+		return By.xpath("//input[@id='username_id']");
+	}
+
+	public By getPasswordTextboxLocator() {
+		return By.xpath("//input[@id='password']");
+	}
+
+	public By getSignInButtonLocator() {
+		return By.xpath("//button[@id='login']");
+	}
+
+	public By getVerificationLocator() {
+		return By.xpath("//a[@href='#/Verification']");
+	}
+	
+//	TC-5 Locators
+	public By getPageBarFixedLocator(String navBarName) {
+		return By.xpath("//ul[@class='page-breadcrumb']/li/a[@href='#/Verification/" + navBarName + "']");
+	}
+	
+	public By getSubNavTabLocator(String subNavName) {
+		return By.xpath("//div[@class=\"sub-navtab\"]/ul/li/a[text()='" + subNavName + "']");
+	}
+	
+//	TC-6 Locators
+	
+	public By getActualRequestedOnDates() {
+		return By.xpath("//div[@col-id=\"RequisitionDate\"]/span[not(contains(@class,'hidden'))]");
+	}
+//	TC-7 Locators
+	public By favouriteOrStarIcon() {
+		return By.xpath("//i[contains(@class,'icon-favourite')]");
+	}
+	
+//	TC-8 LOcators
+	public By calendarFromDropdown() {
+		return By.xpath("(//input[@id='date'])[1]");
+	}
+
+	public By calendarToDropdown() {
+		return By.xpath("(//input[@id='date'])[2]");
+	}
+	
+	public By getOkButtonLocator() {
+		return By.xpath("//button[@class='btn green btn-success']");
+	}
+	
+	public By getStarIconLocator() {
+		return By.xpath("//i[contains(@class,'icon-favourite')]/..");
+	}
+//	TC-9 Locators
+	public By getDateRangeButton() {
+		return By.cssSelector("td [data-hover='dropdown']");
+	}
+	
+	public By getAnchorTagLocatorByText(String anchorTagName) {
+		return By.xpath("//a[contains(text(),'" + anchorTagName + "')]");
+	}
+
+
 
 	public verification_page(WebDriver driver) {
 		super(driver);
@@ -31,8 +97,24 @@ public class verification_page extends StartupPage {
 	 * @throws Exception If any error occurs during the login process.
 	 */
 	public boolean loginToHealthAppByGivenValidCredetial(Map<String, String> expectedData) throws Exception {
-		//Write your logic here
-		return false;
+		Boolean textIsDisplayed = false;
+		try {
+			WebElement usernametextFieldWebElement = commonEvents.findElement(getUsernameTextfieldLocator());
+			commonEvents.highlightElement(usernametextFieldWebElement);
+			commonEvents.sendKeys(getUsernameTextfieldLocator(), expectedData.get("username"));
+
+			WebElement passwordtextFieldWebElement = commonEvents.findElement(getPasswordTextboxLocator());
+			commonEvents.highlightElement(passwordtextFieldWebElement);
+			commonEvents.sendKeys(getPasswordTextboxLocator(), expectedData.get("password"));
+
+			WebElement signinButtonWebElement = commonEvents.findElement(getPasswordTextboxLocator());
+			commonEvents.highlightElement(signinButtonWebElement);
+			commonEvents.click(getSignInButtonLocator());
+			textIsDisplayed = true;
+		} catch (Exception e) {
+			throw e;
+		}
+		return textIsDisplayed;
 	}
 
 	/**
@@ -45,7 +127,18 @@ public class verification_page extends StartupPage {
 	 * @throws Exception If an error occurs during execution.
 	 */
 	public void scrollDownAndClickVerificationTab() throws Exception {
-		//Write your logic here
+		try {
+			JavascriptExecutor jsExecutor = (JavascriptExecutor) driver;
+			WebElement verificationTab = commonEvents.findElement(getVerificationLocator());
+			jsExecutor.executeScript("arguments[0].scrollIntoView(true);", verificationTab);
+			commonEvents.highlight(verificationTab);
+			commonEvents.click(verificationTab);
+
+			// Wait for the URL to contain "Verification/Inventory"
+			commonEvents.waitForUrlContains("Verification/Inventory", 10);
+		} catch (Exception e) {
+			throw e;
+		}
 	}
 
 	/**
@@ -58,8 +151,12 @@ public class verification_page extends StartupPage {
 	 * @throws Exception If an error occurs while retrieving the URL.
 	 */
 	public String verifyVerificationPageUrl() throws Exception {
-		//Write your logic here
-		return null;
+		try {
+			String titleToVerify = commonEvents.getCurrentUrl();
+			return titleToVerify;
+		} catch (Exception e) {
+			throw e;
+		}
 	}
 
 	/**
@@ -72,8 +169,17 @@ public class verification_page extends StartupPage {
 	 * @author YAKSHA
 	 */
 	public boolean verifyVerificationSubModules(By element) {
-		//Write your logic here
-		return false;
+		boolean isElementDisplayed = false;
+		try {
+			if (commonEvents.isDisplayed(element)) {
+				WebElement elementToHighlight = commonEvents.findElement(element);
+				commonEvents.highlight(elementToHighlight);
+				isElementDisplayed = true;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return isElementDisplayed;
 	}
 
 	/**
@@ -91,8 +197,20 @@ public class verification_page extends StartupPage {
 	 */
 	
 	public boolean verifyInventoryTabsAndButtonsAreDisplayed(By element) {
-		//Write your logic here
-		return false;
+		boolean isElementDisplayed = false;
+		try {
+			if (commonEvents.isDisplayed(element)) {
+				WebElement elementToFind = commonEvents.findElement(element);
+				commonEvents.highlight(elementToFind);
+				commonEvents.click(elementToFind);
+				System.out.println("Clicked on " + elementToFind);
+				isElementDisplayed = true;
+			}}
+		
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		return isElementDisplayed;
 	}
 
 	/**
@@ -109,8 +227,19 @@ public class verification_page extends StartupPage {
 	 * @author : YAKSHA
 	 */
 	public boolean verifyPharmacyTabIsActiveOrNot(By element) throws Exception {
-		//Write your logic here
-		return false;
+		boolean isActive = false;
+		try {
+			if (commonEvents.isDisplayed(element)) {
+				WebElement tabs = commonEvents.findElement(element);
+				commonEvents.highlight(tabs);
+				commonEvents.click(tabs);
+				String locatorAttributeValue = commonEvents.getAttribute(tabs, "class");
+				isActive = locatorAttributeValue.contains("active");
+			}
+		} catch (Exception e) {
+			throw e;
+		}
+		return isActive;
 	}
 
 	/**
@@ -128,9 +257,44 @@ public class verification_page extends StartupPage {
 	 * @author : YAKSHA
 	 */
 	
+	//Helper code for TC-5 and 8
+	public boolean highlightAndClickOnElement(By element, String elementName) {
+		boolean isElementDisplayed = false;
+		try {
+			WebElement elementToBeClicked = commonEvents.findElement(element);
+			commonEvents.highlight(elementToBeClicked);
+			commonEvents.click(elementToBeClicked);
+			System.out.println("Clicked on " + elementName);
+			isElementDisplayed = true;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return isElementDisplayed;
+	}
+	
+	
 	public boolean verifyNavigationOfTabs() throws Exception {
-		//Write your logic here
-		return false;
+		boolean isActive = false;
+		try {
+			if (commonEvents.isDisplayed(getPageBarFixedLocator("Inventory"))) {
+
+				highlightAndClickOnElement(getPageBarFixedLocator("Inventory"), "inventory tab");
+				highlightAndClickOnElement(getSubNavTabLocator("Requisition"), "inventory tab");
+
+				WebElement purchaseReqTab = commonEvents.findElement(getSubNavTabLocator("Purchase Request"));
+				commonEvents.highlight(purchaseReqTab);
+				commonEvents.click(purchaseReqTab);
+
+				String locatorAttributeValue = commonEvents.getAttribute(purchaseReqTab, "class");
+				System.out.println("locatorAttributeValue > " + locatorAttributeValue);
+				isActive = locatorAttributeValue.contains("active");
+
+				highlightAndClickOnElement(getSubNavTabLocator("Requisition"), "inventory tab");
+			}
+		} catch (Exception e) {
+			throw e;
+		}
+		return isActive;
 	}
 
 	/**
@@ -146,8 +310,37 @@ public class verification_page extends StartupPage {
 	 * @author : YAKSHA
 	 */
 	public boolean verifyTheResultsDateRangeIsWithinTheSelectedRange(String fromDate, String toDate) throws Exception {
-		//Write your logic here
-		return false;
+		try {
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+			DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+			List<WebElement> actualDatesAfterFilterApplied = commonEvents.getWebElements(getActualRequestedOnDates());
+			LocalDate from = LocalDate.parse(fromDate, formatter);
+			LocalDate to = LocalDate.parse(toDate, formatter);
+
+			for (WebElement dateElement : actualDatesAfterFilterApplied) {
+				commonEvents.highlight(dateElement);
+				String dateText = dateElement.getText();
+
+				LocalDate date;
+				LocalDate newDate;
+				try {
+					date = LocalDate.parse(dateText, inputFormatter);
+					newDate = LocalDate.parse(date.format(formatter), formatter);
+
+				} catch (Exception e) {
+					System.out.println("Date parsing failed for: " + dateText);
+					return false;
+				}
+
+				if (newDate.isBefore(from) || newDate.isAfter(to)) {
+					return false;
+				}
+			}
+			return true;
+
+		} catch (Exception e) {
+			throw e;
+		}
 	}
 
 	/**
@@ -160,8 +353,15 @@ public class verification_page extends StartupPage {
 	 * @author YAKSHA
 	 */
 	public String verifyToolTipText() {
-		//Write your logic here
-		return null;
+		String toolTipValue = "";
+		try {
+			WebElement toolTip = commonEvents.findElement(favouriteOrStarIcon());
+			toolTipValue = commonEvents.highlight(toolTip).getAttribute(toolTip, "title");
+			System.out.println("Tool tip title : " + toolTipValue);
+		} catch (Exception e) {
+			throw e;
+		}
+		return toolTipValue;
 	}
 
 	/**
@@ -182,7 +382,63 @@ public class verification_page extends StartupPage {
 	 * @throws Exception
 	 */
 	public boolean verifyDatesAreRememberedCorrectly(String fromDate, String toDate) throws Exception {
-		//Write your logic here
+		try {
+			// Split the fromDate and toDate into day, month, and year components
+			String[] fromDateComponents = fromDate.split("-");
+			String fromDay = fromDateComponents[0];
+			String fromMonth = fromDateComponents[1];
+			String fromYear = fromDateComponents[2];
+
+			String[] toDateComponents = toDate.split("-");
+			String toDay = toDateComponents[0];
+			String toMonth = toDateComponents[1];
+			String toYear = toDateComponents[2];
+
+			// Locate the date dropdowns and OK button
+			WebElement fromDateDropdown = commonEvents.findElement(calendarFromDropdown());
+			WebElement toDateDropdown = commonEvents.findElement(calendarToDropdown());
+			WebElement okButton = commonEvents.findElement(getOkButtonLocator());
+
+			// Highlight and set the "from" date
+			commonEvents.highlight(fromDateDropdown).sendKeys(fromDateDropdown, fromDay)
+					.sendKeys(fromDateDropdown, fromMonth).sendKeys(fromDateDropdown, fromYear);
+
+			// Highlight and set the "to" date
+			commonEvents.highlight(toDateDropdown).sendKeys(toDateDropdown, toDay).sendKeys(toDateDropdown, toMonth)
+					.sendKeys(toDateDropdown, toYear);
+
+			// Locate and click the tooltip
+			WebElement toolTip = commonEvents.findElement(getStarIconLocator());
+			commonEvents.click(toolTip);
+
+			// Highlight and click the OK button
+			commonEvents.highlight(okButton).click(okButton);
+
+			// Navigate to Pharmacy tab and back to Inventory tab
+			highlightAndClickOnElement(getPageBarFixedLocator("Pharmacy"), "Pharmacy");
+			highlightAndClickOnElement(getPageBarFixedLocator("Inventory"), "Inventory");
+			highlightAndClickOnElement(getSubNavTabLocator("Requisition"), "Requisition");
+
+			// Wait for the OK button to be visible
+			commonEvents.waitTillElementVisible(getOkButtonLocator(), 10000);
+
+			// Construct the actual dates from the selected components
+			String actualFromDate = fromDay + "-" + fromMonth + "-" + fromYear;
+			String actualToDate = toDay + "-" + toMonth + "-" + toYear;
+
+			System.out.println("Actual from date : " + actualFromDate);
+			System.out.println("Actual to date : " + actualToDate);
+
+			// Verify if the remembered dates match the expected dates
+			if (actualFromDate.equals(fromDate) && actualToDate.equals(toDate)) {
+				System.out.println("Returned true");
+
+				return true;
+			}
+
+		} catch (Exception e) {
+			throw e;
+		}
 		return false;
 	}
 	
@@ -198,8 +454,22 @@ public class verification_page extends StartupPage {
 	 * @author : YAKSHA
 	 */
 	public boolean clickDateRangeDropdownAndSelect(String valueToSelect) throws Exception {
-		//Write your logic here
-		return false;
+		try {
+			WebElement dateRangeButton = commonEvents.findElement(getDateRangeButton());
+			commonEvents.highlight(dateRangeButton).click(dateRangeButton);
+			WebElement valueToSelectElement = commonEvents.findElement(getAnchorTagLocatorByText(valueToSelect));
+			commonEvents.highlight(valueToSelectElement).click(valueToSelectElement);
+			commonEvents.highlight(dateRangeButton).click(dateRangeButton);
+			commonEvents.highlight(valueToSelectElement).click(valueToSelectElement);
+			boolean isValueSelected = commonEvents.getAttribute(valueToSelectElement, "class")
+					.contains("selected-range");
+			WebElement okButton = commonEvents.findElement(getOkButtonLocator());
+			commonEvents.highlight(okButton).click(okButton);
+			return isValueSelected;
+
+		} catch (Exception e) {
+			throw e;
+		}
 	}
 
 
